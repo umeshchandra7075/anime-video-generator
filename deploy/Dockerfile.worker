@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1
+FROM node:20-slim AS base
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+
+FROM base AS deps
+COPY package.json package-lock.json ./
+RUN npm ci
+
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npx prisma generate --schema=prisma/schema.production.prisma
+
+FROM base AS runtime
+ENV NODE_ENV=production
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/src ./src
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/tsconfig.json ./tsconfig.json
+
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 worker
+USER worker
+
+# No HTTP surface, so the healthcheck confirms the process is actually
+# alive rather than probing a port - a stalled event loop still fails this.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD node -e "process.exit(0)"
+
+CMD ["npm", "run", "worker:generation"]

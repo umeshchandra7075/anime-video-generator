@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0e0f17;
+  color: #f3efe6;
+}
+
+* {
+  scrollbar-color: #31344c #12131f;
+}
+
+/* Visible keyboard focus everywhere, per accessibility requirements */
+:focus-visible {
+  outline: 2px solid #6fe7dd;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
