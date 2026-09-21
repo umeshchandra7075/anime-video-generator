@@ -55,10 +55,6 @@ export async function POST(req: NextRequest) {
       throw genericFail();
     }
 
-    if (!user.emailVerifiedAt) {
-      throw Errors.emailNotVerified();
-    }
-
     await db.user.update({
       where: { id: user.id },
       data: { failedLoginCount: 0, lockedUntil: null },

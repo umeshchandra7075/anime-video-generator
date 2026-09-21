@@ -40,8 +40,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const ctx = await requireAuth(req);
-    if (!ctx.emailVerified) throw Errors.emailNotVerified();
-
     const body = await req.json().catch(() => null);
     const parsed = createProjectSchema.safeParse(body);
     if (!parsed.success) {
