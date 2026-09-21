@@ -7,3 +7,7 @@ dist/
 .DS_Store
 /prisma/dev.db
 coverage/
+
+.data/
+disable-email-verification.ps1
+tsconfig.tsbuildinfo
