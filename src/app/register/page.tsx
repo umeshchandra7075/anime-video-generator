@@ -46,8 +46,7 @@ export default function RegisterPage() {
     return (
       <AuthShell title="Registration successful! 🎉">
         <p className="text-sm text-paper/70">
-          Your account has been created. Please verify your email to continue - we&apos;ve sent a link to{" "}
-          <span className="text-paper">{form.email}</span>.
+          Your account has been created successfully. You can now log in.
         </p>
         {devVerificationUrl && (
           <div className="mt-4 rounded-sm border border-lantern-500/40 bg-lantern-500/5 p-3">
@@ -116,3 +115,5 @@ export default function RegisterPage() {
     </AuthShell>
   );
 }
+
+
