@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requireVerifiedAuth, clientIp } from "@/lib/auth/context";
+import { requireAuth, clientIp } from "@/lib/auth/context";
 import { ProviderFactory } from "@/lib/ai/factory/provider-factory";
 import { checkRateLimit } from "@/lib/auth/rateLimit";
 import { ok, fail } from "@/lib/api/response";
@@ -21,7 +21,7 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await requireVerifiedAuth(req);
+    const ctx = await requireAuth(req);
 
     const rl = await checkRateLimit({
       key: `ai-chat:${ctx.userId}:${clientIp(req)}`,
@@ -52,3 +52,4 @@ export async function POST(req: NextRequest) {
     return fail(err);
   }
 }
+

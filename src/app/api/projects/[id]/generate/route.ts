@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { requireVerifiedAuth } from "@/lib/auth/context";
+import { requireAuth } from "@/lib/auth/context";
 import { getOwnedProject } from "@/lib/domain/projectAccess";
 import { reserveCredits } from "@/lib/usage/creditService";
 import { getJobQueueAdapter } from "@/lib/queue/jobQueueFactory";
@@ -32,7 +32,7 @@ interface Params {
  */
 export async function POST(req: NextRequest, { params }: Params) {
   try {
-    const ctx = await requireVerifiedAuth(req);
+    const ctx = await requireAuth(req);
     const project = await getOwnedProject(params.id, ctx.userId);
 
     const inFlight = await db.generationJob.findFirst({
